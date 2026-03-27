@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  carimam_product_db:
+    image: postgres:15-alpine
+    container_name: carimam_postgres_product
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pa5svword321carr1mann
+      POSTGRES_DB: carimam_product
+    ports:
+      - "8433:5432"
+    volumes:
+      - pgdata_product:/var/lib/postgresql/data
+
+volumes:
+  pgdata_product:
