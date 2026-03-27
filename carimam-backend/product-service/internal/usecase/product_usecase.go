@@ -20,11 +20,12 @@ type CreateProductRequest struct {
 // INTERFACE: DAFTAR KONTRAK FUNGSI
 // ==========================================
 type ProductUseCase interface {
-	CreateProduct(cookID uint, req CreateProductRequest) (uint, error) // <-- Sekarang mengembalikan (uint, error)
+	CreateProduct(cookID uint, req CreateProductRequest) (uint, error)
 	GetAllProducts() ([]models.Product, error)
+	GetProductByID(id uint) (*models.Product, error)
 	UpdateProduct(cookID uint, productID uint, req CreateProductRequest) error
 	DeleteProduct(cookID uint, productID uint) error
-	UpdateProductImage(cookID uint, productID uint, imageURL string) error // <-- Ini yang tadi belum terdaftar!
+	UpdateProductImage(cookID uint, productID uint, imageURL string) error
 }
 
 type productUseCase struct {
@@ -104,4 +105,8 @@ func (u *productUseCase) UpdateProductImage(cookID uint, productID uint, imageUR
 
 	product.ImageURL = imageURL
 	return u.repo.Update(product)
+}
+
+func (u *productUseCase) GetProductByID(id uint) (*models.Product, error) {
+	return u.repo.GetByID(id)
 }

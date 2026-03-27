@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  carimam_order_db:
+    image: postgres:15-alpine
+    container_name: carimam_postgres_order
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pa5svword321carr1mann
+      POSTGRES_DB: carimam_order
+    ports:
+      - "8434:5432"
+    volumes:
+      - pgdata_order:/var/lib/postgresql/data
+
+volumes:
+  pgdata_order:

@@ -20,6 +20,7 @@ func NewProductHandler(r *gin.Engine, usecase usecase.ProductUseCase, cookMiddle
 	handler := &ProductHandler{usecase}
 
 	r.GET("/api/products", handler.GetAllProducts)
+	r.GET("/api/products/:id", handler.GetProductByID)
 
 	cookGroup := r.Group("/api")
 	cookGroup.Use(cookMiddleware)
@@ -170,5 +171,23 @@ func (h *ProductHandler) UploadImage(c *gin.Context) {
 		"data": gin.H{
 			"image_url": imageURL,
 		},
+	})
+}
+
+func (h *ProductHandler) GetProductByID(c *gin.Context) {
+	productID, _ := strconv.Atoi(c.Param("id"))
+
+	product, err := h.usecase.GetProductByID(uint(productID))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"status":  "error",
+			"message": "Menu makanan tidak ditemukan",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  "success",
+		"data":    product,
 	})
 }
