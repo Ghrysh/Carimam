@@ -16,6 +16,8 @@ func NewUserHandler(r *gin.Engine, usecase usecase.UserUseCase) {
 
 	r.POST("/register", handler.Register)
 	r.POST("/login", handler.Login)
+
+	r.POST("/api/internal/users/deduct", handler.DeductBalance)
 }
 
 func (h *UserHandler) Register(c *gin.Context) {
@@ -73,4 +75,24 @@ func (h *UserHandler) Login(c *gin.Context) {
 			"token": token,
 		},
 	})
+}
+
+// ===================================
+// FUNGSI BARU: Penerima Request Potong Saldo
+// ===================================
+func (h *UserHandler) DeductBalance(c *gin.Context) {
+	var req usecase.DeductBalanceRequest
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": "error", "message": "Format request potong saldo salah"})
+		return
+	}
+
+	err := h.usecase.DeductBalance(req)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": "error", "message": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": "success", "message": "Saldo berhasil dipotong!"})
 }

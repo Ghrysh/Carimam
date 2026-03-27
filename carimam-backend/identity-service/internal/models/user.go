@@ -19,7 +19,7 @@ type User struct {
 	Latitude  float64        `json:"latitude"`
 	Longitude float64        `json:"longitude"`
 	
-	Balance   float64        `gorm:"default:0" json:"balance"`
+	Balance   float64        `gorm:"default:100000" json:"balance"`
 	Rating    float32        `gorm:"default:0" json:"rating"`
 
 	CreatedAt time.Time      `json:"created_at"`

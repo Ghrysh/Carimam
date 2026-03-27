@@ -17,6 +17,24 @@ type RegisterRequest struct {
 	Role     string `json:"role" form:"role"` 
 }
 
+type LoginRequest struct {
+	Email    string `json:"email" form:"email" binding:"required,email"`
+	Password string `json:"password" form:"password" binding:"required"`
+}
+
+// DTO BARU UNTUK POTONG SALDO
+type DeductBalanceRequest struct {
+	UserID uint    `json:"user_id" binding:"required"`
+	Amount float64 `json:"amount" binding:"required,gt=0"`
+}
+
+type UserUseCase interface {
+	Register(req RegisterRequest) error
+	Login(req LoginRequest) (string, error)
+	DeductBalance(req DeductBalanceRequest) error
+	GetProfile(userID uint) (*models.User, error)
+}
+
 type userUseCase struct {
 	repo repository.UserRepository
 }
@@ -52,16 +70,6 @@ func (u *userUseCase) Register(req RegisterRequest) error {
 	return u.repo.CreateUser(newUser)
 }
 
-type LoginRequest struct {
-	Email    string `json:"email" form:"email" binding:"required,email"`
-	Password string `json:"password" form:"password" binding:"required"`
-}
-
-type UserUseCase interface {
-	Register(req RegisterRequest) error
-	Login(req LoginRequest) (string, error)
-}
-
 func (u *userUseCase) Login(req LoginRequest) (string, error) {
 	user, err := u.repo.FindByEmail(req.Email)
 	if err != nil {
@@ -79,4 +87,25 @@ func (u *userUseCase) Login(req LoginRequest) (string, error) {
 	}
 
 	return token, nil
+}
+
+// ===================================
+// FUNGSI BARU: Logika Potong Saldo
+// ===================================
+func (u *userUseCase) DeductBalance(req DeductBalanceRequest) error {
+	user, err := u.repo.FindByID(req.UserID)
+	if err != nil {
+		return errors.New("user tidak ditemukan")
+	}
+
+	if user.Balance < req.Amount {
+		return errors.New("saldo tidak mencukupi untuk melakukan pesanan ini")
+	}
+
+	user.Balance -= req.Amount
+	return u.repo.Update(user)
+}
+
+func (u *userUseCase) GetProfile(userID uint) (*models.User, error) {
+	return u.repo.FindByID(userID)
 }

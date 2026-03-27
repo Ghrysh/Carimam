@@ -51,15 +51,38 @@ func main() {
 	protected.Use(middleware.AuthMiddleware())
 
 	protected.GET("/profile", func(c *gin.Context) {
-		userID, _ := c.Get("user_id")
-		role, _ := c.Get("role")
+		userID, exists := c.Get("user_id")
+		if !exists {
+			c.JSON(401, gin.H{"status": "error", "message": "Sesi tidak valid"})
+			return
+		}
+
+		var id uint
+		switch v := userID.(type) {
+		case float64:
+			id = uint(v)
+		case uint:
+			id = v
+		default:
+			c.JSON(500, gin.H{"status": "error", "message": "Tipe data ID tidak dikenali"})
+			return
+		}
+
+		user, err := userUseCase.GetProfile(id)
+		if err != nil {
+			c.JSON(404, gin.H{"status": "error", "message": "User tidak ditemukan"})
+			return
+		}
 
 		c.JSON(200, gin.H{
 			"status":  "success",
-			"message": "Selamat datang di area rahasia!",
+			"message": "Berhasil mengambil data profil",
 			"data": gin.H{
-				"user_id": userID,
-				"role":    role,
+				"user_id": user.ID,
+				"name":    user.Name,
+				"email":   user.Email,
+				"role":    user.Role,
+				"balance": user.Balance,
 			},
 		})
 	})

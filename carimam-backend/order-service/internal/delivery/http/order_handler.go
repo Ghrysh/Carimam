@@ -18,6 +18,7 @@ func NewOrderHandler(r *gin.Engine, usecase usecase.OrderUseCase, eaterMiddlewar
 	eaterGroup.Use(eaterMiddleware)
 	{
 		eaterGroup.POST("/orders", handler.CreateOrder)
+		eaterGroup.GET("/orders", handler.GetMyOrders)
 	}
 }
 
@@ -43,6 +44,22 @@ func (h *OrderHandler) CreateOrder(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{
 		"status":  "success",
-		"message": "Pesanan berhasil dibuat! Menunggu pembayaran. 📝",
+		"message": "Pesanan berhasil dibuat dan saldo otomatis terpotong! 💸",
+	})
+}
+
+func (h *OrderHandler) GetMyOrders(c *gin.Context) {
+	eaterID, _ := c.Get("user_id")
+
+	orders, err := h.usecase.GetMyOrders(eaterID.(uint))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"status": "error", "message": "Gagal mengambil riwayat pesanan"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  "success",
+		"message": "Berhasil mengambil riwayat pesanan",
+		"data":    orders,
 	})
 }
