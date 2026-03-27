@@ -1,0 +1,685 @@
+{
+  "info": {
+    "_postman_id": "1fc05499-dcb4-4242-889a-f7102d22a40d",
+    "name": "CariMam.id API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "34153714"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register Cook",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Dapur Ibu Ani",
+                  "type": "text",
+                  "uuid": "e2e6e5af-c490-4b10-9d81-774ce8442b6c"
+                },
+                {
+                  "key": "email",
+                  "value": "dapur.ani@gmail.com",
+                  "type": "text",
+                  "uuid": "5d63b229-8e2f-4cca-bd78-96acdc991d4c"
+                },
+                {
+                  "key": "password",
+                  "value": "passwordkuat456",
+                  "type": "text",
+                  "uuid": "502876c2-cafa-493f-a916-1ddbc2252254"
+                },
+                {
+                  "key": "phone",
+                  "value": "08987654321",
+                  "type": "text",
+                  "uuid": "8cc66528-43aa-4e63-8463-39008f6ccbc8"
+                },
+                {
+                  "key": "role",
+                  "value": "cook",
+                  "description": "cook atau eater",
+                  "type": "text",
+                  "uuid": "c8729f94-6172-45ee-85b2-b9f46dcc05f0"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login Cook",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var responseData = pm.response.json();\r",
+                  "\r",
+                  "if (responseData.status === \"success\") {\r",
+                  "    pm.collectionVariables.set(\"token\", responseData.data.token);\r",
+                  "    console.log(\"Token berhasil ditangkap dan disimpan! 🪄\");\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "dapur.ani@gmail.com",
+                  "type": "text",
+                  "uuid": "5d63b229-8e2f-4cca-bd78-96acdc991d4c"
+                },
+                {
+                  "key": "password",
+                  "value": "passwordkuat456",
+                  "type": "text",
+                  "uuid": "502876c2-cafa-493f-a916-1ddbc2252254"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Profile",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{base_url}}/api/profile",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login Eater",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var responseData = pm.response.json();\r",
+                  "\r",
+                  "if (responseData.status === \"success\") {\r",
+                  "    pm.collectionVariables.set(\"token\", responseData.data.token);\r",
+                  "    console.log(\"Token berhasil ditangkap dan disimpan! 🪄\");\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "gispi.desu@gmail.com",
+                  "type": "text",
+                  "uuid": "5d63b229-8e2f-4cca-bd78-96acdc991d4c"
+                },
+                {
+                  "key": "password",
+                  "value": "password",
+                  "type": "text",
+                  "uuid": "502876c2-cafa-493f-a916-1ddbc2252254"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register Eater",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Ghryshvi",
+                  "type": "text",
+                  "uuid": "e2e6e5af-c490-4b10-9d81-774ce8442b6c"
+                },
+                {
+                  "key": "email",
+                  "value": "gispi.desu@gmail.com",
+                  "type": "text",
+                  "uuid": "5d63b229-8e2f-4cca-bd78-96acdc991d4c"
+                },
+                {
+                  "key": "password",
+                  "value": "password",
+                  "type": "text",
+                  "uuid": "502876c2-cafa-493f-a916-1ddbc2252254"
+                },
+                {
+                  "key": "phone",
+                  "value": "083105104899",
+                  "type": "text",
+                  "uuid": "8cc66528-43aa-4e63-8463-39008f6ccbc8"
+                },
+                {
+                  "key": "role",
+                  "value": "eater",
+                  "description": "cook atau eater",
+                  "type": "text",
+                  "uuid": "c8729f94-6172-45ee-85b2-b9f46dcc05f0"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Daftar Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/profile",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Add Product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var responseData = pm.response.json();\r",
+                  "\r",
+                  "if (responseData.status === \"success\") {\r",
+                  "    pm.collectionVariables.set(\"product_id\", responseData.data.id);\r",
+                  "    console.log(\"ID Produk berhasil ditangkap: \" + responseData.data.id);\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Mie Goreng Spesial",
+                  "type": "text",
+                  "uuid": "56d3e202-be47-4629-875a-a90da801c31c"
+                },
+                {
+                  "key": "description",
+                  "value": "Mie goreng dengan telur ceplok dan sosis.",
+                  "type": "text",
+                  "uuid": "979c4530-63ff-4216-8383-4bf6c2f0894e"
+                },
+                {
+                  "key": "price",
+                  "value": "20000",
+                  "type": "text",
+                  "uuid": "3b0baf3e-f3cd-4430-bb3a-5af925ec2c75"
+                },
+                {
+                  "key": "category",
+                  "value": "Makanan Berat",
+                  "type": "text",
+                  "uuid": "3441dbde-e831-4a11-bc5a-7883635914ba"
+                },
+                {
+                  "key": "stock",
+                  "value": "20",
+                  "type": "text",
+                  "uuid": "3be3eddf-f811-406e-934c-7322450c6858"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/products",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "All Products",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{base_url}}/api/products",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Edit Product",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Nasi Goreng Spesial",
+                  "type": "text",
+                  "uuid": "56d3e202-be47-4629-875a-a90da801c31c"
+                },
+                {
+                  "key": "description",
+                  "value": "Nasi goreng dengan telur ceplok dan sosis.",
+                  "type": "text",
+                  "uuid": "979c4530-63ff-4216-8383-4bf6c2f0894e"
+                },
+                {
+                  "key": "price",
+                  "value": "30000",
+                  "type": "text",
+                  "uuid": "3b0baf3e-f3cd-4430-bb3a-5af925ec2c75"
+                },
+                {
+                  "key": "category",
+                  "value": "Makanan Berat",
+                  "type": "text",
+                  "uuid": "3441dbde-e831-4a11-bc5a-7883635914ba"
+                },
+                {
+                  "key": "stock",
+                  "value": "20",
+                  "type": "text",
+                  "uuid": "3be3eddf-f811-406e-934c-7322450c6858"
+                },
+                {
+                  "key": "price",
+                  "value": "30000",
+                  "type": "text",
+                  "uuid": "fdec136d-050d-4c14-b940-25baaa38c35b"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/products/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "products",
+                "{{product_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/products/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "products",
+                "{{product_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Image",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "uuid": "59c42e89-5441-4ca0-96b8-a389f5ab7b24",
+                  "src": "/C:/Users/Hype AMD/Downloads/nasi_goreng.jpg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/products/{{product_id}}/image",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "products",
+                "{{product_id}}",
+                "image"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Product",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/products/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "products",
+                "{{product_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Checkout Pesanan",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"items\": [\r\n        {\r\n            \"product_id\": 2,\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/orders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "orders"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[INTERNAL] Potong Saldo",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"user_id\": 3,\r\n    \"amount\": 20000\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/internal/users/deduct",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "internal",
+                "users",
+                "deduct"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Riwayat Pesanan",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/orders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "orders"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": ""
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "product_id",
+      "value": ""
+    }
+  ]
+}
