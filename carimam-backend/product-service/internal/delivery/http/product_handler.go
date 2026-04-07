@@ -16,11 +16,13 @@ type ProductHandler struct {
 	usecase usecase.ProductUseCase
 }
 
-func NewProductHandler(r *gin.Engine, usecase usecase.ProductUseCase, cookMiddleware gin.HandlerFunc) {
+func NewProductHandler(r *gin.Engine, usecase usecase.ProductUseCase, cookMiddleware gin.HandlerFunc, eaterMiddleware gin.HandlerFunc) {
 	handler := &ProductHandler{usecase}
 
 	r.GET("/api/products", handler.GetAllProducts)
 	r.GET("/api/products/:id", handler.GetProductByID)
+
+	r.GET("/api/products/:id/reviews", handler.GetProductReviews)
 
 	cookGroup := r.Group("/api")
 	cookGroup.Use(cookMiddleware)
@@ -29,6 +31,12 @@ func NewProductHandler(r *gin.Engine, usecase usecase.ProductUseCase, cookMiddle
 		cookGroup.PUT("/products/:id", handler.UpdateProduct)
 		cookGroup.DELETE("/products/:id", handler.DeleteProduct)
 		cookGroup.PATCH("/products/:id/image", handler.UploadImage)
+	}
+
+	eaterGroup := r.Group("/api")
+	eaterGroup.Use(eaterMiddleware)
+	{
+		eaterGroup.POST("/products/:id/reviews", handler.AddProductReview)
 	}
 }
 
@@ -190,4 +198,39 @@ func (h *ProductHandler) GetProductByID(c *gin.Context) {
 		"status":  "success",
 		"data":    product,
 	})
+}
+
+func (h *ProductHandler) AddProductReview(c *gin.Context) {
+	productID, _ := strconv.Atoi(c.Param("id"))
+	eaterID, exists := c.Get("user_id")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": "error", "message": "Sesi tidak valid"})
+		return
+	}
+
+	var req usecase.CreateReviewRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": "error", "message": "Format review salah"})
+		return
+	}
+
+	err := h.usecase.AddProductReview(eaterID.(uint), uint(productID), req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"status": "error", "message": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"status": "success", "message": "Terima kasih atas ulasanmu! ⭐"})
+}
+
+func (h *ProductHandler) GetProductReviews(c *gin.Context) {
+	productID, _ := strconv.Atoi(c.Param("id"))
+
+	reviews, err := h.usecase.GetProductReviews(uint(productID))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"status": "error", "message": "Gagal mengambil ulasan"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": "success", "data": reviews})
 }

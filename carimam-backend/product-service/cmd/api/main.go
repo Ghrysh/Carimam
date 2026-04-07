@@ -25,7 +25,8 @@ func main() {
 	}
 
 	db := config.SetupDatabase()
-	db.AutoMigrate(&models.Product{})
+
+	db.AutoMigrate(&models.Product{}, &models.ProductReview{})
 
 	// ==========================================================
 	// INIT GIN ENGINE & WIRING (Merakit Komponen)
@@ -33,11 +34,12 @@ func main() {
 	r := gin.Default()
 
 	cookOnlyMiddleware := middleware.AuthMiddleware("cook")
+	eaterMiddleware := middleware.AuthMiddleware("eater")
 
 	productRepo := repository.NewProductRepository(db)
 	productUseCase := usecase.NewProductUseCase(productRepo)
 
-	handler.NewProductHandler(r, productUseCase, cookOnlyMiddleware)
+	handler.NewProductHandler(r, productUseCase, cookOnlyMiddleware, eaterMiddleware)
 
 	// ==========================================================
 	// PUBLIC ROUTES

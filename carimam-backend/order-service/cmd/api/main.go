@@ -24,7 +24,7 @@ func main() {
 	db := config.SetupDatabase()
 
 	log.Println("Menjalankan proses migrasi database order...")
-	errMigrate := db.AutoMigrate(&models.Order{}, &models.OrderItem{})
+	errMigrate := db.AutoMigrate(&models.Order{}, &models.OrderItem{}, &models.Cart{}, &models.CartItem{})
 	if errMigrate != nil {
 		log.Fatalf("Gagal melakukan migrasi: %v", errMigrate)
 	}
@@ -37,6 +37,10 @@ func main() {
 	orderRepo := repository.NewOrderRepository(db)
 	orderUseCase := usecase.NewOrderUseCase(orderRepo)
 	handler.NewOrderHandler(r, orderUseCase, eaterOnlyMiddleware)
+
+	cartRepo := repository.NewCartRepository(db)
+	cartUseCase := usecase.NewCartUseCase(cartRepo, orderUseCase)
+	handler.NewCartHandler(r, cartUseCase, eaterOnlyMiddleware)
 
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "pong! CariMam Order Service is Running 🛒🚀"})

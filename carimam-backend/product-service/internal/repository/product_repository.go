@@ -11,6 +11,8 @@ type ProductRepository interface {
 	GetByID(id uint) (*models.Product, error)
 	Update(product *models.Product) error
 	Delete(id uint) error
+	AddReview(review *models.ProductReview) error
+	GetReviewsByProductID(productID uint) ([]models.ProductReview, error)
 }
 
 type productRepository struct {
@@ -43,4 +45,14 @@ func (r *productRepository) Update(product *models.Product) error {
 
 func (r *productRepository) Delete(id uint) error {
 	return r.db.Delete(&models.Product{}, id).Error
+}
+
+func (r *productRepository) AddReview(review *models.ProductReview) error {
+	return r.db.Create(review).Error
+}
+
+func (r *productRepository) GetReviewsByProductID(productID uint) ([]models.ProductReview, error) {
+	var reviews []models.ProductReview
+	err := r.db.Where("product_id = ?", productID).Order("created_at desc").Find(&reviews).Error
+	return reviews, err
 }

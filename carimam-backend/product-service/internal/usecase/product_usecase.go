@@ -16,6 +16,11 @@ type CreateProductRequest struct {
 	ImageURL    string  `json:"image_url" form:"image_url"`
 }
 
+type CreateReviewRequest struct {
+	Rating  int    `json:"rating" binding:"required,min=1,max=5"`
+	Comment string `json:"comment"`
+}
+
 // ==========================================
 // INTERFACE: DAFTAR KONTRAK FUNGSI
 // ==========================================
@@ -26,6 +31,8 @@ type ProductUseCase interface {
 	UpdateProduct(cookID uint, productID uint, req CreateProductRequest) error
 	DeleteProduct(cookID uint, productID uint) error
 	UpdateProductImage(cookID uint, productID uint, imageURL string) error
+	AddProductReview(eaterID uint, productID uint, req CreateReviewRequest) error
+	GetProductReviews(productID uint) ([]models.ProductReview, error)
 }
 
 type productUseCase struct {
@@ -109,4 +116,24 @@ func (u *productUseCase) UpdateProductImage(cookID uint, productID uint, imageUR
 
 func (u *productUseCase) GetProductByID(id uint) (*models.Product, error) {
 	return u.repo.GetByID(id)
+}
+
+func (u *productUseCase) AddProductReview(eaterID uint, productID uint, req CreateReviewRequest) error {
+	_, err := u.repo.GetByID(productID)
+	if err != nil {
+		return errors.New("produk tidak ditemukan")
+	}
+
+	review := &models.ProductReview{
+		ProductID: productID,
+		EaterID:   eaterID,
+		Rating:    req.Rating,
+		Comment:   req.Comment,
+	}
+
+	return u.repo.AddReview(review)
+}
+
+func (u *productUseCase) GetProductReviews(productID uint) ([]models.ProductReview, error) {
+	return u.repo.GetReviewsByProductID(productID)
 }

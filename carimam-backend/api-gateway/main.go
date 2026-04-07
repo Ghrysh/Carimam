@@ -50,6 +50,9 @@ func main() {
 	r.Any("/api/orders", proxyTo(orderService))
 	r.Any("/api/orders/*filepath", proxyTo(orderService))
 
+	r.Any("/api/cart", proxyTo(orderService))
+	r.Any("/api/cart/*filepath", proxyTo(orderService))
+
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "pong! CariMam API Gateway is Running 🌐🚀"})
 	})
